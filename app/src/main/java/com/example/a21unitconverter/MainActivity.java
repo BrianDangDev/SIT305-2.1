@@ -13,63 +13,58 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private Spinner sourceSpinner, destSpinner, weightSourceSpinner, weightDestSpinner, temSourceSpinner, temDesSpinner;
-    private EditText inputEditText, weightInputEditText, temInputEditText ;
+    private EditText inputEditText, weightInputEditText, temInputEditText;
     private TextView resultTextView, weightResultTextView, temResultTextView;
-    private Button convertButton,weightConvertButton, temConvertButton ;
+    private Button convertButton, weightConvertButton, temConvertButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Length Conversion
+        //////////////////// Length Conversion////////////////////
         sourceSpinner = findViewById(R.id.length_source_unit_spinner);
         destSpinner = findViewById(R.id.length_dest_unit_spinner);
         inputEditText = findViewById(R.id.length_input_value_edittext);
         resultTextView = findViewById(R.id.length_result_textview);
         convertButton = findViewById(R.id.length_convert_button);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.source_length_units_array, android.R.layout.simple_spinner_item);
+        // Create an adapter with the desired source and destination length units
+        ArrayAdapter < CharSequence > adapter = ArrayAdapter.createFromResource(this, R.array.source_length_units_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sourceSpinner.setAdapter(adapter);
 
-        // Create an adapter with only the desired destination units
-        ArrayAdapter<CharSequence> destAdapter = ArrayAdapter.createFromResource(this, R.array.dest_length_units_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter < CharSequence > destAdapter = ArrayAdapter.createFromResource(this, R.array.dest_length_units_array, android.R.layout.simple_spinner_item);
         destAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         destSpinner.setAdapter(destAdapter);
 
-
-        // Weight Conversion
+        //////////////////// Weight Conversion////////////////////
         weightSourceSpinner = findViewById(R.id.weight_source_unit_spinner);
         weightDestSpinner = findViewById(R.id.weight_dest_unit_spinner);
         weightInputEditText = findViewById(R.id.weight_input_value_edittext);
         weightResultTextView = findViewById(R.id.weight_result_textview);
         weightConvertButton = findViewById(R.id.weight_convert_button);
 
-// Create an adapter with the desired source weight units
-        ArrayAdapter<CharSequence> weightSourceAdapter = ArrayAdapter.createFromResource(this, R.array.source_weight_units_array, android.R.layout.simple_spinner_item);
+        // Create an adapter with the desired source and destination weight units
+        ArrayAdapter < CharSequence > weightSourceAdapter = ArrayAdapter.createFromResource(this, R.array.source_weight_units_array, android.R.layout.simple_spinner_item);
         weightSourceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         weightSourceSpinner.setAdapter(weightSourceAdapter);
 
-// Create an adapter with the desired destination weight units
-        ArrayAdapter<CharSequence> weightDestAdapter = ArrayAdapter.createFromResource(this, R.array.dest_weight_units_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter < CharSequence > weightDestAdapter = ArrayAdapter.createFromResource(this, R.array.dest_weight_units_array, android.R.layout.simple_spinner_item);
         weightDestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         weightDestSpinner.setAdapter(weightDestAdapter);
 
-
-
-        // Temperature conversion
+        //////////////////// Temperature Conversion////////////////////
         temSourceSpinner = findViewById(R.id.temperature_source_unit_spinner);
         temDesSpinner = findViewById(R.id.temperature_dest_unit_spinner);
         temInputEditText = findViewById(R.id.temperature_input_value_edittext);
         temResultTextView = findViewById(R.id.temperature_result_textview);
         temConvertButton = findViewById(R.id.temperature_convert_button);
 
-        ArrayAdapter<CharSequence> tempSourceAdapter = ArrayAdapter.createFromResource(this, R.array.source_temp_units_array, android.R.layout.simple_spinner_item);
+        // Create an adapter with the desired source and destination temperature units
+        ArrayAdapter < CharSequence > tempSourceAdapter = ArrayAdapter.createFromResource(this, R.array.source_temp_units_array, android.R.layout.simple_spinner_item);
         tempSourceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         temSourceSpinner.setAdapter(tempSourceAdapter);
 
-
-        ArrayAdapter<CharSequence> tempDestAdapter = ArrayAdapter.createFromResource(this, R.array.dest_temp_units_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter < CharSequence > tempDestAdapter = ArrayAdapter.createFromResource(this, R.array.dest_temp_units_array, android.R.layout.simple_spinner_item);
         tempDestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         temDesSpinner.setAdapter(tempDestAdapter);
 
@@ -88,11 +83,10 @@ public class MainActivity extends AppCompatActivity {
         convertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                convert();
+                lengthConvert();
             }
         });
     }
-
 
     private void temConvert() {
         // Get the input value and selected units
@@ -105,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
             temResultTextView.setText("");
             return;
         }
-
-        // Convert the input value to Celsius
+        // Convert to Celsius
         double celsius = Double.parseDouble(input);
 
         if (sourceUnit.equals("Fahrenheit")) {
@@ -114,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
         } else if (sourceUnit.equals("Kelvin")) {
             celsius = celsius - 273.15;
         }
-
-        // Convert Celsius to the desired destination unit
         double result = celsius;
 
         if (destUnit.equals("Fahrenheit")) {
@@ -123,26 +114,21 @@ public class MainActivity extends AppCompatActivity {
         } else if (destUnit.equals("Kelvin")) {
             result = celsius + 273.15;
         }
-
-        // Update the result text view
-
         temResultTextView.setText(String.format("%.2f", result));
     }
 
     private void weightConvert() {
-        // Get the selected source and destination units from the spinners
+        // Get the source and desitnation unit from spinners
         String sourceUnit = weightSourceSpinner.getSelectedItem().toString();
         String destUnit = weightDestSpinner.getSelectedItem().toString();
 
-        // Get the input value from the EditText and convert it to a double
+        // Get the input and convert input to a double
         String inputValueString = weightInputEditText.getText().toString();
         double inputValue = Double.parseDouble(inputValueString);
-
-        // Initialize variables for the converted value and the conversion factor
         double convertedValue = 0.0;
         double conversionFactor = 0.0;
 
-        // Determine the conversion factor based on the selected units
+        // Define the conversion value
         if (sourceUnit.equals("Kilo") && destUnit.equals("Pound")) {
             conversionFactor = 2.20462;
         } else if (sourceUnit.equals("Kilo") && destUnit.equals("Ounce")) {
@@ -151,25 +137,21 @@ public class MainActivity extends AppCompatActivity {
             conversionFactor = 0.00110231;
         }
 
-        // Calculate the converted value using the input value and conversion factor
         convertedValue = inputValue * conversionFactor;
 
-        // Display the converted value in the result TextView
+        // Display the converted value
         weightResultTextView.setText(String.format("%.2f", convertedValue));
     }
 
-    private void convert() {
+    private void lengthConvert() {
         String sourceUnit = sourceSpinner.getSelectedItem().toString();
         String destUnit = destSpinner.getSelectedItem().toString();
         String inputValueStr = inputEditText.getText().toString();
         double result = 0.0;
-
-        // Check if the input value is valid
         if (inputValueStr.isEmpty()) {
             resultTextView.setText("Please enter a value");
             return;
         }
-
         double inputValue;
         try {
             inputValue = Double.parseDouble(inputValueStr);
@@ -177,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
             resultTextView.setText("Invalid input value");
             return;
         }
-
         if (sourceUnit.equals("Centimeter") && destUnit.equals("Inch")) {
             result = inputValue / 2.54;
         } else if (sourceUnit.equals("Centimeter") && destUnit.equals("Foot")) {
@@ -202,6 +183,5 @@ public class MainActivity extends AppCompatActivity {
         resultTextView.setText(String.format("%.2f %s = %.2f %s", inputValue, sourceUnit, result, destUnit));
 
     }
-
 
 }
